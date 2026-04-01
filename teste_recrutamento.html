@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Recrutamento e Seleção - Visão Estratégica</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px 40px 60px;
+            color: #333;
+            background-color: #f4f6f9;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        h2 { font-size: 1rem; color: #555; font-weight: normal; margin-bottom: 20px; }
+
+        .instructions {
+            background-color: #fff;
+            padding: 15px 20px;
+            border-left: 5px solid #0056b3;
+            margin-bottom: 24px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .color-box {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .question-container {
+            margin-bottom: 16px;
+            padding: 16px 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            border-left: 5px solid #ccc;
+            transition: background-color 0.3s;
+        }
+
+        .question-container.correct   { background-color: #d4edda !important; border-left-color: #28a745 !important; }
+        .question-container.incorrect { background-color: #f8d7da !important; border-left-color: #dc3545 !important; }
+
+        .options {
+            margin-top: 10px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .options label {
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .options label:hover { color: #0056b3; }
+
+        .feedback {
+            margin-top: 10px;
+            font-size: 0.88rem;
+            font-style: italic;
+            display: none;
+            color: #555;
+        }
+
+        .feedback.show { display: block; }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 32px 0 16px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 32px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        button:hover  { opacity: 0.88; transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+
+        #btn-submit  { background-color: #0056b3; color: #fff; }
+        #btn-restart { background-color: #6c757d; color: #fff; display: none; }
+        #btn-gabarito { background-color: #fff; color: #333; border: 1px solid #ccc; font-size: 0.85rem; padding: 8px 18px; }
+
+        #resultado {
+            display: none;
+            text-align: center;
+            padding: 24px;
+            background-color: #fff;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        #resultado h3 { margin-top: 0; font-size: 1.4rem; }
+
+        .score-badge {
+            display: inline-block;
+            font-size: 2.8rem;
+            font-weight: bold;
+            padding: 12px 28px;
+            border-radius: 12px;
+            margin: 12px 0;
+        }
+
+        .score-alto   { background-color: #d4edda; color: #155724; }
+        .score-medio  { background-color: #fff3cd; color: #856404; }
+        .score-baixo  { background-color: #f8d7da; color: #721c24; }
+
+        .score-label  { font-size: 1rem; color: #555; margin-top: 6px; }
+
+        .progress-bar-wrapper {
+            background: #e9ecef;
+            border-radius: 8px;
+            height: 12px;
+            max-width: 360px;
+            margin: 12px auto 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.8s ease;
+            background-color: #0056b3;
+        }
+
+        .gabarito {
+            margin-top: 32px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            display: none;
+            border: 1px dashed #aaa;
+        }
+
+        .gabarito h3 { margin-top: 0; }
+
+        .gabarito li { margin-bottom: 8px; }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <div style="text-align:center; margin-bottom: 16px;">
+        <img src="ICONE CGC.jpg" alt="Logo CGC" style="height: 80px; object-fit: contain;">
+    </div>
+
+    <h1>Teste de Conhecimentos: Técnico de Recrutamento e Seleção</h1>
+    <h2>Avaliação de Perfil Administrativo e Estratégico</h2>
+
+    <div class="instructions">
+        <p><strong>Instruções:</strong> Leia atentamente cada afirmação abaixo e assinale se ela é <strong>Verdadeiro (V)</strong> ou <strong>Falso (F)</strong> com base nas melhores práticas de Recrutamento e Seleção, incluindo abordagens ágeis e estratégicas.</p>
+    </div>
+
+    <div id="resultado">
+        <h3>Resultado</h3>
+        <div id="score-badge" class="score-badge"></div>
+        <div class="score-label" id="score-label"></div>
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+        </div>
+        <p id="score-msg" style="margin-top:16px; font-size:0.95rem;"></p>
+    </div>
+
+    <form id="quiz-form">
+
+        <div class="question-container admin" data-answer="F" data-feedback="Esta é a visão antiga. Recrutar hoje é estratégico e focado em gerar valor, não apenas preencher vagas.">
+            <p><strong>1.</strong> O processo de recrutamento consiste essencialmente em preencher vagas em aberto o mais rápido possível, focando na triagem de currículos e agendamento de entrevistas.</p>
+            <div class="options">
+                <label><input type="radio" name="q1" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q1" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container estrategico" data-answer="V" data-feedback="Reflete a visão do Recrutamento Moderno e Estratégico.">
+            <p><strong>2.</strong> O recrutamento moderno e estratégico visa construir vantagem competitiva através das pessoas, identificando potencial, capacidade de adaptação e criando densidade de talento (Talent Density) na organização.</p>
+            <div class="options">
+                <label><input type="radio" name="q2" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q2" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container admin" data-answer="F" data-feedback="Embora importante, focar apenas na velocidade pode comprometer a qualidade. O 'Quality of Hire' é fundamental.">
+            <p><strong>3.</strong> O indicador "Time to Hire" (Tempo de Contratação) é a única métrica relevante para avaliar a eficiência de um departamento de recrutamento e seleção.</p>
+            <div class="options">
+                <label><input type="radio" name="q3" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q3" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container estrategico" data-answer="V" data-feedback="A qualidade da contratação é o indicador de maior impacto no negócio.">
+            <p><strong>4.</strong> No contexto do RH Ágil, o indicador mais importante é o "Quality of Hire" (Qualidade da Contratação), que avalia o desempenho do colaborador, sua integração na equipe e o impacto gerado no negócio, superando a importância da velocidade da contratação.</p>
+            <div class="options">
+                <label><input type="radio" name="q4" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q4" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container admin" data-answer="F" data-feedback="A avaliação deve incluir potencial, adaptabilidade, mindset e alinhamento cultural, não apenas o passado.">
+            <p><strong>5.</strong> A seleção de candidatos deve basear-se exclusivamente na experiência profissional passada descrita no currículo e na formação acadêmica do indivíduo.</p>
+            <div class="options">
+                <label><input type="radio" name="q5" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q5" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container estrategico" data-answer="V" data-feedback="Princípio chave do Recrutamento Ágil e avaliação de competências.">
+            <p><strong>6.</strong> Em um processo de Recrutamento Ágil, a avaliação vai além da experiência passada, considerando fortemente a capacidade de aprendizagem, a adaptabilidade (mindset) e o alinhamento com a cultura organizacional.</p>
+            <div class="options">
+                <label><input type="radio" name="q6" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q6" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container admin" data-answer="F" data-feedback="Entrevistas não estruturadas estão sujeitas a vieses, como o Viés da Primeira Impressão. Entrevistas estruturadas são mais preditivas.">
+            <p><strong>7.</strong> A técnica de entrevista não estruturada, onde o recrutador conduz a conversa de forma livre e baseada na intuição (primeira impressão), é o método mais eficaz para prever o desempenho futuro do candidato.</p>
+            <div class="options">
+                <label><input type="radio" name="q7" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q7" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container estrategico" data-answer="V" data-feedback="O uso de métodos como STAR ajuda a avaliar competências reais e mitigar vieses inconscientes.">
+            <p><strong>8.</strong> Entrevistas estruturadas, baseadas em competências (como o método STAR ou CAR), onde perguntas padronizadas são aplicadas a todos os candidatos, reduzem vieses inconscientes e aumentam a capacidade de prever o desempenho profissional.</p>
+            <div class="options">
+                <label><input type="radio" name="q8" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q8" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container admin" data-answer="F" data-feedback="O recrutamento moderno exige atração inteligente, employer branding e sourcing ativo.">
+            <p><strong>9.</strong> O recrutador deve focar apenas em divulgar as vagas nos portais de emprego e aguardar que os candidatos enviem seus currículos (post and pray).</p>
+            <div class="options">
+                <label><input type="radio" name="q9" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q9" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container estrategico" data-answer="V" data-feedback="A Candidate Persona transforma o recrutamento de uma procura aleatória em uma estratégia direcionada.">
+            <p><strong>10.</strong> A criação de uma "Candidate Persona" ajuda a direcionar a estratégia de atração, compreendendo as motivações, expectativas e canais adequados para encontrar o talento ideal, tornando o recrutamento uma estratégia proativa.</p>
+            <div class="options">
+                <label><input type="radio" name="q10" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q10" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container estrategico" data-answer="F" data-feedback="Workforce Planning é o planejamento estratégico e proativo das necessidades futuras de talento da organização.">
+            <p><strong>11.</strong> O Workforce Planning (Planejamento da Força de Trabalho) é uma atividade reativa que ocorre apenas quando um colaborador pede demissão, visando a sua substituição imediata.</p>
+            <div class="options">
+                <label><input type="radio" name="q11" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q11" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+        <div class="question-container estrategico" data-answer="V" data-feedback="Painéis diversos trazem múltiplas perspectivas e reduzem a influência de vieses individuais na decisão.">
+            <p><strong>12.</strong> A diversidade nas equipes de contratação (painéis de entrevistadores diversos) é uma prática recomendada para reduzir o "Viés de Afinidade" e garantir decisões de contratação mais equilibradas e fundamentadas.</p>
+            <div class="options">
+                <label><input type="radio" name="q12" value="V"> Verdadeiro</label>
+                <label><input type="radio" name="q12" value="F"> Falso</label>
+            </div>
+            <div class="feedback"></div>
+        </div>
+
+    </form>
+
+    <div class="actions">
+        <button type="button" id="btn-submit">Enviar Respostas</button>
+        <button type="button" id="btn-restart">Reiniciar Teste</button>
+    </div>
+
+    <div style="text-align:center; margin-top: 8px;">
+        <button type="button" id="btn-gabarito">🔑 Exibir / Ocultar Gabarito (Avaliador)</button>
+    </div>
+
+    <div class="gabarito" id="gabarito">
+        <h3>Gabarito para o Avaliador:</h3>
+
+        <div id="categoria-stats" style="display:none; margin-bottom:20px; padding:16px; background:#f8f9fa; border-radius:8px;">
+            <strong>Desempenho por Categoria:</strong>
+            <div style="margin-top:10px; display:flex; gap:24px; flex-wrap:wrap;">
+                <div>
+                    <span style="font-size:0.9rem; color:#555;">RH Administrativo / Operacional</span><br>
+                    <span id="pct-admin" style="font-size:1.6rem; font-weight:bold; color:#0056b3;"></span>
+                    <span id="acertos-admin" style="font-size:0.85rem; color:#777;"></span>
+                </div>
+                <div>
+                    <span style="font-size:0.9rem; color:#555;">RH Estratégico / Ágil</span><br>
+                    <span id="pct-estrat" style="font-size:1.6rem; font-weight:bold; color:#00aa00;"></span>
+                    <span id="acertos-estrat" style="font-size:0.85rem; color:#777;"></span>
+                </div>
+            </div>
+        </div>
+
+        <ul>
+            <li><strong>1. Falso</strong> — Esta é a visão antiga. Recrutar hoje é estratégico e focado em gerar valor.</li>
+            <li><strong>2. Verdadeiro</strong> — Reflete a visão do Recrutamento Moderno e Estratégico.</li>
+            <li><strong>3. Falso</strong> — Focar apenas em velocidade compromete a qualidade. O "Quality of Hire" é fundamental.</li>
+            <li><strong>4. Verdadeiro</strong> — A qualidade da contratação é o indicador de maior impacto no negócio.</li>
+            <li><strong>5. Falso</strong> — A avaliação deve incluir potencial, adaptabilidade, mindset e alinhamento cultural.</li>
+            <li><strong>6. Verdadeiro</strong> — Princípio chave do Recrutamento Ágil e avaliação de competências.</li>
+            <li><strong>7. Falso</strong> — Entrevistas não estruturadas estão sujeitas a vieses. Estruturadas são mais preditivas.</li>
+            <li><strong>8. Verdadeiro</strong> — Métodos como STAR avaliam competências reais e mitigam vieses inconscientes.</li>
+            <li><strong>9. Falso</strong> — O recrutamento moderno exige atração inteligente, employer branding e sourcing ativo.</li>
+            <li><strong>10. Verdadeiro</strong> — A Candidate Persona transforma o recrutamento em uma estratégia direcionada.</li>
+            <li><strong>11. Falso</strong> — Workforce Planning é o planejamento estratégico e proativo de necessidades futuras de talento.</li>
+            <li><strong>12. Verdadeiro</strong> — Painéis diversos reduzem vieses individuais e tornam a decisão mais equilibrada.</li>
+        </ul>
+    </div>
+
+    <footer>Teste de Recrutamento e Seleção &mdash; Visão Estratégica</footer>
+
+    <script>
+        const form = document.getElementById('quiz-form');
+        const btnSubmit = document.getElementById('btn-submit');
+        const btnRestart = document.getElementById('btn-restart');
+        const btnGabarito = document.getElementById('btn-gabarito');
+        const gabaritoDiv = document.getElementById('gabarito');
+        const resultadoDiv = document.getElementById('resultado');
+        const scoreBadge = document.getElementById('score-badge');
+        const scoreLabel = document.getElementById('score-label');
+        const scoreMsg = document.getElementById('score-msg');
+        const progressBar = document.getElementById('progress-bar');
+
+        const questions = Array.from(form.querySelectorAll('.question-container'));
+        const total = questions.length;
+
+        btnSubmit.addEventListener('click', () => {
+            // Check all answered
+            const unanswered = questions.filter(q => {
+                const name = q.querySelector('input[type=radio]').name;
+                return !form.querySelector(`input[name="${name}"]:checked`);
+            });
+
+            if (unanswered.length > 0) {
+                unanswered[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                unanswered[0].style.outline = '2px solid #dc3545';
+                setTimeout(() => unanswered[0].style.outline = '', 1800);
+                alert(`Por favor, responda todas as questões antes de enviar.\n${unanswered.length} questão(ões) sem resposta.`);
+                return;
+            }
+
+            let acertos = 0;
+            let adminAcertos = 0, adminTotal = 0;
+            let estratAcertos = 0, estratTotal = 0;
+
+            questions.forEach(q => {
+                const name = q.querySelector('input[type=radio]').name;
+                const selected = form.querySelector(`input[name="${name}"]:checked`).value;
+                const correct = q.dataset.answer;
+                const feedback = q.querySelector('.feedback');
+                const isAdmin = q.classList.contains('admin');
+
+                if (isAdmin) adminTotal++; else estratTotal++;
+
+                // Disable inputs
+                q.querySelectorAll('input[type=radio]').forEach(r => r.disabled = true);
+
+                if (selected === correct) {
+                    acertos++;
+                    if (q.classList.contains('admin')) adminAcertos++; else estratAcertos++;
+                    q.classList.add('correct');
+                    feedback.textContent = '✔ Correto! ' + q.dataset.feedback;
+                    feedback.style.color = '#155724';
+                } else {
+                    q.classList.add('incorrect');
+                    feedback.textContent = `✘ Incorreto. Resposta correta: ${correct === 'V' ? 'Verdadeiro' : 'Falso'}. ` + q.dataset.feedback;
+                    feedback.style.color = '#721c24';
+                }
+                feedback.classList.add('show');
+            });
+
+            // Show result
+            const pct = Math.round((acertos / total) * 100);
+            scoreBadge.textContent = `${acertos} / ${total}`;
+            scoreBadge.className = 'score-badge ' + (pct >= 80 ? 'score-alto' : pct >= 50 ? 'score-medio' : 'score-baixo');
+            scoreLabel.textContent = `${pct}% de aproveitamento`;
+            progressBar.style.width = pct + '%';
+            progressBar.style.backgroundColor = pct >= 80 ? '#28a745' : pct >= 50 ? '#ffc107' : '#dc3545';
+
+            if (pct >= 80) {
+                scoreMsg.textContent = 'Excelente! Você demonstrou sólido conhecimento em Recrutamento Estratégico.';
+            } else if (pct >= 50) {
+                scoreMsg.textContent = 'Bom desempenho! Há espaço para aprofundar os conceitos de RH Ágil e Estratégico.';
+            } else {
+                scoreMsg.textContent = 'Recomenda-se revisar os conceitos de Recrutamento Moderno, Ágil e Estratégico.';
+            }
+
+            // Populate per-category stats for evaluator
+            const pctAdmin = Math.round((adminAcertos / adminTotal) * 100);
+            const pctEstrat = Math.round((estratAcertos / estratTotal) * 100);
+            document.getElementById('pct-admin').textContent = pctAdmin + '%';
+            document.getElementById('acertos-admin').textContent = ` (${adminAcertos}/${adminTotal})`;
+            document.getElementById('pct-estrat').textContent = pctEstrat + '%';
+            document.getElementById('acertos-estrat').textContent = ` (${estratAcertos}/${estratTotal})`;
+            document.getElementById('categoria-stats').style.display = 'block';
+
+            resultadoDiv.style.display = 'block';
+            resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            btnSubmit.style.display = 'none';
+            btnRestart.style.display = 'inline-block';
+        });
+
+        btnRestart.addEventListener('click', () => {
+            form.reset();
+            questions.forEach(q => {
+                q.classList.remove('correct', 'incorrect');
+                q.style.outline = '';
+                q.querySelectorAll('input[type=radio]').forEach(r => r.disabled = false);
+                const feedback = q.querySelector('.feedback');
+                feedback.classList.remove('show');
+                feedback.textContent = '';
+            });
+            resultadoDiv.style.display = 'none';
+            document.getElementById('categoria-stats').style.display = 'none';
+            progressBar.style.width = '0%';
+            btnSubmit.style.display = 'inline-block';
+            btnRestart.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        const SENHA_ADMIN = 'admin123';
+        let adminAutorizado = false;
+
+        btnGabarito.addEventListener('click', () => {
+            if (!adminAutorizado) {
+                const senha = prompt('Digite a senha do avaliador:');
+                if (senha === null) return;
+                if (senha !== SENHA_ADMIN) {
+                    alert('Senha incorreta.');
+                    return;
+                }
+                adminAutorizado = true;
+            }
+            const visible = gabaritoDiv.style.display === 'block';
+            gabaritoDiv.style.display = visible ? 'none' : 'block';
+            if (!visible) gabaritoDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    </script>
+
+</body>
+</html>
